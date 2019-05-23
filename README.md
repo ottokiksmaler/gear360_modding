@@ -3,13 +3,36 @@ Repository for Samsung Gear 360 (2017) modding
 
 After preliminary testing, it seems that Gear 360 (2017) is very very similar to NX1/500 and it even shares a lot of firmware with them even the parts that make no sense on this camera (like aperture control, touchscreen LCD, etc).
 
-Quick note - it is possible to gain telnet access to the camera by following the instructions from https://github.com/ottokiksmaler/nx500_nx1_modding/blob/master/Running-telnet-server-on-camera.md exactly and selecting connecting to iOS when camera powers on (long press Menu, then menu again to change to iOS and then click main shooting [OK] button).
+Quick note - it is possible to gain telnet access to the camera by doing the following:
+- Download the file (https://github.com/ottokiksmaler/gear360_modding/raw/master/gear360_mods_SD.zip) and extract it to the root directory of the microSD card (so that it contains ```DCIM``` and ```mods``` directories and ```info.tg```, ```mod.sh``` and ```nx_cs.adj``` files). Put the card in the camera and power on the camera.
+- You should see the blue light above the Power button light up for a second.
+- Double-click the [Power] button on the camera. You should see a top light cycle green-orange-green to indicate it's working now.
+- Select connecting to iOS (long press Menu, then menu again to change to iOS and then click main shooting [OK] button).
+- Connect to the Wi-Fi access point created by the camera (Gear 360), the password is shown on the camera screen.
+- Open the browser and go to http://192.168.43.1:8888 (assuming your camera is also using 192.168.43.1 as the IP, it seems all are, but you can check yout IP from GUI or from the command line by typing ```ipconfig``` on Windows or ```ifconfig``` or ```ip addr ls``` on Linux.
 
-Almost everything I tried works the same way, for example, to take a photo
-```st key click s2```
-To "click" menu button
-```st key click menu```
-And so on.
+The provided script that is triggered by double-click of the Power button does the following:
+- Starts the telnet server on port 23 - for playing around and testing
+- Starts the FTP server on port 21 - for file transfer
+- Starts the HTTP server on port 8888 - for browsing the very simple gallery, taking a photo, taking 5 photos, changing mode, setting the current ISO and MAX AUTO ISO, as well as showing all USRLIST variables availavle and executing a remote shell command on the camera without telnet
+- Does some inital settings **I** find useful (you are free to change anything and everything):
+```
+# SET PARAMS
+# set ISO to 100
+st cap capdtm setusr 5 0x050001
+# set AUTO ISO MAX to 125
+st cap capdtm setusr 64 0x400000
+# set mode 0-movie, 1-smartauto, 2-program, 3-aperture, 4-shutter, 5-manual, 6-imode, 7-magic, 8-wifi, 9-scene, A-smartpro, B-SAS, 
+st cap capdtm setusr 0 4
+# set mode 0-movie, 1-smartauto, 2-program, 3-aperture, 4-shutter, 5-manual, 6-imode, 7-magic, 8-wifi, 9-scene, A-smartpro, B-SAS, 
+st cap capdtm setusr 1 0x10004
+# ISO NR - high ISO noise reduction - OFF
+st cap capdtm setusr 30 0x1e0000
+# LTNR - long time noise reduction - OFF
+st cap capdtm setusr 31 0x1f0000
+```
+
+Almost everything I tried [works the same way as on NX1/NX500](https://github.com/ottokiksmaler/nx500_nx1_modding/blob/master/ST%20Commands.md) including [ST CAP commands](https://github.com/ottokiksmaler/nx500_nx1_modding/blob/master/ST_CAP_CAPDTM.md), for example, to take a photo ```st key click s2```, to "click" menu button ```st key click menu```, and so on.
 
 One thing that annoyed me was lowest maximum ISO of 400 (way to high for such a small sensor), but ```st cap capdtm``` to the rescue:
 ```
