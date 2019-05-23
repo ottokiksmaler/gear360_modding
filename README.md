@@ -1,7 +1,7 @@
 # Gear 360 modding
 Repository for Samsung Gear 360 (2017) modding
 
-After preliminary testing, it seems that Gear 360 (2017) is very very similar to NX1/500 and it even shares a lot of firmware with them even the parts that make no sense on this camera (like aperture control, touchscreen LCD, etc).
+After preliminary testing, it seems that Gear 360 (2017) is very very similar to NX1/500 and it even shares a lot of firmware with them even the parts that make no sense on this camera (like aperture control, touchscreen LCD, etc). Some things are either non-implemented or will crash the camera like messing with settings *during* the video recording, etc (you just power it on again - no issues so far).
 
 Quick note - it is possible to gain telnet access to the camera by doing the following:
 - Download the file (https://github.com/ottokiksmaler/gear360_modding/raw/master/gear360_mods_SD.zip) and extract it to the root directory of the microSD card (so that it contains ```DCIM``` and ```mods``` directories and ```info.tg```, ```mod.sh``` and ```nx_cs.adj``` files). Put the card in the camera and power on the camera.
@@ -12,7 +12,7 @@ Quick note - it is possible to gain telnet access to the camera by doing the fol
 - Open the browser and go to http://192.168.43.1:8888 (assuming your camera is also using 192.168.43.1 as the IP, it seems all are, but you can check yout IP from GUI or from the command line by typing ```ipconfig``` on Windows or ```ifconfig``` or ```ip addr ls``` on Linux.
 
 The provided script that is triggered by double-click of the Power button does the following:
-- Starts the telnet server on port 23 - for playing around and testing
+- Starts the telnet server on port 23 - for playing around and testing - username **root** no password
 - Starts the FTP server on port 21 - for file transfer
 - Starts the HTTP server on port 8888 - for browsing the very simple gallery, taking a photo, taking 5 photos, changing mode, setting the current ISO and MAX AUTO ISO, as well as showing all USRLIST variables availavle and executing a remote shell command on the camera without telnet
 - Does some inital settings **I** find useful (you are free to change anything and everything):
@@ -31,6 +31,8 @@ st cap capdtm setusr 30 0x1e0000
 # LTNR - long time noise reduction - OFF
 st cap capdtm setusr 31 0x1f0000
 ```
+
+You can add the line ```st key click wifi``` to the end of the script automatically start the Wi-Fi.
 
 Almost everything I tried [works the same way as on NX1/NX500](https://github.com/ottokiksmaler/nx500_nx1_modding/blob/master/ST%20Commands.md) including [ST CAP commands](https://github.com/ottokiksmaler/nx500_nx1_modding/blob/master/ST_CAP_CAPDTM.md), for example, to take a photo ```st key click s2```, to "click" menu button ```st key click menu```, and so on.
 
